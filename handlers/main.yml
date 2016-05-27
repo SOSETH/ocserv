@@ -1,0 +1,6 @@
+---
+  - name: reload-ocserv
+    service: name=ocserv.service enabled=yes state=restarted
+
+  - name: reload systemd
+    command: systemctl daemon-reload

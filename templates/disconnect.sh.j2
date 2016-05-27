@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# The following parameters are passed on the environment.
+# REASON, USERNAME, GROUPNAME, HOSTNAME (the hostname selected by client),
+# DEVICE, IP_REAL (the real IP of the client), IP_REAL_LOCAL (the local
+# interface IP the client connected), IP_LOCAL (the local IP
+# in the P-t-P connection), IP_REMOTE (the VPN IP of the client),
+# IPV6_LOCAL (the IPv6 local address if there are both IPv4 and IPv6
+# assigned), IPV6_REMOTE (the IPv6 remote address), IPV6_PREFIX, and
+# ID (a unique numeric ID); REASON may be "connect" or "disconnect".
+# The disconnect script will receive the additional values: STATS_BYTES_IN,
+# STATS_BYTES_OUT, STATS_DURATION that contain a 64-bit counter of the bytes
+# output from the tun device, and the duration of the session in seconds.
+
+echo "User $USERNAME disconnected at $(date) after $STATS_DURATION, transmitting $STATS_BYTES_OUT bytes (out) and $STATS_BYTES_IN bytes(in)" >> /vpnlog
+
+TABLENAME=vpn-$DEVICE
+iptables -D FORWARD -j $TABLENAME-F
+iptables -D INPUT -j $TABLENAME-I
+iptables -F $TABLENAME-F
+iptables -X $TABLENAME-F
+iptables -F $TABLENAME-I
+iptables -X $TABLENAME-I

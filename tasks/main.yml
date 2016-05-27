@@ -1,0 +1,74 @@
+---
+  - name: Install letsencrypt
+    apt: name={{ item }} state=present update_cache=yes cache_valid_time=1800 default_release=jessie-backports
+    with_items:
+      - letsencrypt
+
+  - name: Make sure that letsencrypt's directory exists
+    file: path=/etc/letsencrypt state=directory
+
+  - name: Configure letsencrypt
+    template: src=letsencrypt.ini.j2 dest=/etc/letsencrypt/cli.ini owner=root group=root mode=0644
+
+#  - name: Generate certificate
+#    command: letsencrypt certonly -d {{ansible_nodename}}.njsm.de -d vpn.njsm.de --agree-tos
+#    args:
+#      creates: /etc/letsencrypt/live/{{ansible_nodename}}.njsm.de/fullchain.pem
+#    notify: reload-ocserv
+
+  - name: Check if dh parameters exists
+    stat: path=/etc/ocserv/dh.pem
+    register: dhfile
+
+  - name: Generate DH parameters (locally!).
+    local_action: command openssl dhparam -outform PEM -out /tmp/{{ansible_nodename}}.pem 2048
+    when: not dhfile.stat.exists
+
+  - name: Copy DH parameters to server
+    copy: src=/tmp/{{ansible_nodename}}.pem dest=/etc/ocserv/dh.pem
+    when: not dhfile.stat.exists
+    notify: reload-ocserv
+
+  - name: Remove local copy of dh parameters
+    local_action: file path=/tmp/{{ansible_nodename}}.pem state=absent
+    when: not dhfile.stat.exists
+
+  - name: Configure ocserv
+    template: src=ocserv.conf.j2 dest=/etc/ocserv/ocserv.conf owner=root group=root mode=0644
+    notify: reload-ocserv
+
+  - name: Kill systemd socket
+    command: systemctl mask ocserv.socket
+    changed_when: False
+
+  - name: Overwrite systemd unit file
+    copy: src=ocserv.service dest=/etc/systemd/system/ocserv.service
+    notify: reload systemd
+
+  - name: Copy users
+    copy: src=users.passwd dest=/etc/ocserv/users.passwd
+    notify: reload-ocserv
+
+  - name: Copy users' OTP codes
+    copy: src=users.otp dest=/etc/ocserv/users.otp
+    notify: reload-ocserv
+
+  - name: Create script dir
+    file: path=/etc/ocserv/scripts state=directory
+
+  - name: Copy scripts
+    template: src={{ item }}.j2 dest=/etc/ocserv/scripts/{{ item }} owner=root group=root mode=0750
+    with_items:
+      - connect.sh
+      - disconnect.sh
+    notify: reload-ocserv
+
+  - name: Create user config directory
+    file: path=/etc/ocserv/config-per-user state=directory
+
+  - name: Copy lunch's static lease
+    copy: src=lunch.static dest=/etc/ocserv/config-per-user/lunch
+
+  - name: Enable IP forwarding
+    command: sysctl -w net.ipv4.ip_forward=1
+    changed_when: False

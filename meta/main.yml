@@ -1,0 +1,4 @@
+---
+  dependencies:
+    - { role: manual_software, software_list: [ ocserv_0.11.1-1_amd64.deb ], software_pkg: ocserv, software_ver: 0.11.1-1, software_name: "ocserv" }
+    - { role: local-ca, caname: ovpn, ca: { cert: /etc/ocserv/ca.crt, crl: /etc/ocserv/crl.pem }}
