@@ -1,0 +1,14 @@
+ocserv_cl_network: 100.65.254.0/24
+
+ocserv_have_dns: True
+ocserv_dns: 100.65.1.1
+ocserv_dns_domain: zh.njsm.de
+
+ocserv_routes:
+  - 100.64.1.0/24
+  - 100.65.1.0/24
+
+ocserv_tcp_port: 444
+ocserv_tcp_is_proxy: True
+ocserv_udp_port: 443
+ocserv_banner: 'Welcome to vpn.njsm.de. Access is restricted!'

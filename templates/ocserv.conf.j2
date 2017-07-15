@@ -1,3 +1,5 @@
+# Managed by Ansible (role: openconnect), do not edit!
+
 # User authentication method. Could be set multiple times and in
 # that case all should succeed. To enable multiple methods use
 # multiple auth directives. Available options: certificate,
@@ -75,8 +77,8 @@ listen-host-is-dyndns = false
 # TCP and UDP port number
 # When systemd is running as init, this needs to be adjusted in
 # the corresponding unit file as well.
-tcp-port = 443
-udp-port = 443
+tcp-port = {{ ocserv_tcp_port }}
+udp-port = {{ ocserv_udp_port }}
 
 # Accept connections using a socket file. It accepts HTTP
 # connections (i.e., without SSL/TLS unlike its TCP counterpart),
@@ -154,7 +156,7 @@ ca-cert = /etc/ocserv/ca.crt
 isolate-workers = true
 
 # A banner to be displayed on clients
-banner = "Welcome to portal-lee. Usage of this system is governed by SOSETH and ETH regulations."
+banner = "{{ ocserv_banner }}"
 
 # Limit the number of clients. Unset or set to zero for unlimited.
 #max-clients = 1024
@@ -168,7 +170,9 @@ max-same-clients = 2
 # which supports the proxy protocol, set this to obtain the correct
 # client addresses. The proxy protocol (v2) would then be expected in
 # the TCP or UNIX socket (not the UDP one).
-#listen-proxy-proto = true
+{% if ocserv_tcp_is_proxy %}
+listen-proxy-proto = true
+{% endif %}
 
 # Limit the number of client connections to one every X milliseconds
 # (X is the provided value). Set to zero for no limit.
@@ -399,8 +403,7 @@ default-domain = cluster.local
 # Note that, you could use addresses from a subnet of your LAN network if you
 # enable proxy arp in the LAN interface (see http://infradead.org/ocserv/recipes-ocserv-pseudo-bridge.html);
 # in that case it is recommended to set ping-leases to true.
-ipv4-network = 192.168.254.0
-ipv4-netmask = 255.255.255.0
+ipv4-network = {{ ocserv_cl_network }}
 
 # An alternative way of specifying the network:
 #ipv4-network = 192.168.1.0/24
@@ -429,7 +432,12 @@ ipv4-netmask = 255.255.255.0
 
 # The domains over which the provided DNS should be used. Use
 # multiple lines for multiple domains.
-#split-dns = cluster.local
+
+{% if ocserv_have_dns %}
+tunnel-all-dns = false
+split-dns = {{ ocserv_dns_domain }}
+dns = {{ ocserv_dns }}
+{% endif %}
 
 # Prior to leasing any IP from the pool ping it to verify that
 # it is not in use by another (unrelated to this server) host.
@@ -461,7 +469,9 @@ ipv4-netmask = 255.255.255.0
 #
 # On some anyconnect clients there is a limit of 64 routes in maximum.
 
-route = 172.31.0.192/26
+{% for item in ocserv_routes %}
+route = {{ item }}
+{% endfor %}
 
 # Subsets of the routes above that will not be routed by
 # the server.
