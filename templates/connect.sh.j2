@@ -16,7 +16,9 @@ TABLENAME=vpn-$DEVICE
 iptables -n --list "$TABLENAME-F" >/dev/null 2>&1
 if [ $? -ne 0 ] ; then
 	iptables -N $TABLENAME-F
-	iptables -I $TABLENAME-F -i $DEVICE -d 172.31.0.192/26 -j ACCEPT
+{% for item in ocserv_routes %}
+	iptables -I $TABLENAME-F -i $DEVICE -d {{ item }} -j ACCEPT
+{% endfor %}
 	iptables -I $TABLENAME-F -d $IP_REMOTE -j ACCEPT
 	iptables -I FORWARD -j $TABLENAME-F
 fi
