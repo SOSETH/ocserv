@@ -26,8 +26,7 @@
     notify: reload-ocserv
 
   - name: Kill systemd socket
-    command: systemctl mask ocserv.socket
-    changed_when: False
+    systemd: name=ocserv.socket masked=True
 
   - name: Overwrite systemd unit file
     copy: src=ocserv.service dest=/etc/systemd/system/ocserv.service
