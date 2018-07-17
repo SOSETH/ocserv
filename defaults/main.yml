@@ -1,0 +1,13 @@
+ocserv_cl_network: 192.168.254.0/24
+
+ocserv_have_dns: False
+#ocserv_dns:
+#ocserv_dns_domain:
+
+ocserv_routes:
+  - 172.31.0.192/26
+
+ocserv_tcp_port: 443
+ocserv_tcp_is_proxy: True
+ocserv_udp_port: 443
+ocserv_banner: 'Welcome to portal. Usage of this system is governed by SOSETH and ETH regulations.'

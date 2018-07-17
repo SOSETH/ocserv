@@ -1,20 +1,8 @@
 ---
-  #- name: Install letsencrypt
-  #  apt: name={{ item }} state=present update_cache=yes cache_valid_time=1800 default_release=jessie-backports
-  #  with_items:
-  #    - letsencrypt
-
-  #- name: Make sure that letsencrypt's directory exists
-  #  file: path=/etc/letsencrypt state=directory
-#
-  #- name: Configure letsencrypt
-  #  template: src=letsencrypt.ini.j2 dest=/etc/letsencrypt/cli.ini owner=root group=root mode=0644
-
-#  - name: Generate certificate
-#    command: letsencrypt certonly -d {{ansible_nodename}}.njsm.de -d vpn.njsm.de --agree-tos
-#    args:
-#      creates: /etc/letsencrypt/live/{{ansible_nodename}}.njsm.de/fullchain.pem
-#    notify: reload-ocserv
+  - name: Install ocserv
+    apt: name={{ item }} state=present update_cache=yes cache_valid_time=1800
+    with_items:
+      - ocserv
 
   - name: Check if dh parameters exists
     stat: path=/etc/ocserv/dh.pem
@@ -38,8 +26,7 @@
     notify: reload-ocserv
 
   - name: Kill systemd socket
-    command: systemctl mask ocserv.socket
-    changed_when: False
+    systemd: name=ocserv.socket masked=True
 
   - name: Overwrite systemd unit file
     copy: src=ocserv.service dest=/etc/systemd/system/ocserv.service
