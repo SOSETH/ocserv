@@ -1,6 +1,12 @@
 ---
   - name: reload-ocserv
-    service: name=ocserv.service enabled=yes state=restarted
+    become: True
+    service:
+      name: ocserv.service
+      enabled: True
+      state: restarted
 
   - name: reload systemd
-    systemd: daemon_reload=True
+    become: True
+    systemd:
+      daemon_reload: True

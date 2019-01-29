@@ -1,11 +1,15 @@
 ---
   - name: Install ocserv
-    apt: name={{ item }} state=present update_cache=yes cache_valid_time=1800
-    with_items:
-      - ocserv
+    become: True
+    apt:
+      name: ocserv
+      state: present
+      update_cache: True
+      cache_valid_time: 1800
 
   - name: Check if dh parameters exists
-    stat: path=/etc/ocserv/dh.pem
+    stat:
+      path: /etc/ocserv/dh.pem
     register: dhfile
 
   - name: Generate DH parameters (locally!).
@@ -13,7 +17,9 @@
     when: not dhfile.stat.exists
 
   - name: Copy DH parameters to server
-    copy: src=/tmp/{{ansible_nodename}}.pem dest=/etc/ocserv/dh.pem
+    copy:
+      src: "/tmp/{{ansible_nodename}}.pem"
+      dest: /etc/ocserv/dh.pem
     when: not dhfile.stat.exists
     notify: reload-ocserv
 
@@ -22,21 +28,42 @@
     when: not dhfile.stat.exists
 
   - name: Configure ocserv
-    template: src=ocserv.conf.j2 dest=/etc/ocserv/ocserv.conf owner=root group=root mode=0644
+    become: True
+    template:
+      src: ocserv.conf.j2
+      dest: /etc/ocserv/ocserv.conf
+      owner: root
+      group: root
+      mode: 0644
     notify: reload-ocserv
 
   - name: Kill systemd socket
-    systemd: name=ocserv.socket masked=True
+    become: True
+    systemd:
+      name: ocserv.socket
+      masked: True
 
   - name: Overwrite systemd unit file
-    copy: src=ocserv.service dest=/etc/systemd/system/ocserv.service
+    become: True
+    copy:
+      src: ocserv.service
+      dest: /etc/systemd/system/ocserv.service
     notify: reload systemd
 
   - name: Create script dir
-    file: path=/etc/ocserv/scripts state=directory
+    become: True
+    file:
+      path: /etc/ocserv/scripts
+      state: directory
 
   - name: Copy scripts
-    template: src={{ item }}.j2 dest=/etc/ocserv/scripts/{{ item }} owner=root group=root mode=0750
+    become: True
+    template:
+      src: "{{ item }}.j2"
+      dest: "/etc/ocserv/scripts/{{ item }}"
+      owner: root
+      group: root
+      mode: 0750
     with_items:
       - connect.sh
       - disconnect.sh
