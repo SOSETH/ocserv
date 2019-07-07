@@ -13,7 +13,8 @@
     register: dhfile
 
   - name: Generate DH parameters (locally!).
-    local_action: command openssl dhparam -outform PEM -out /tmp/{{ansible_nodename}}.pem 2048
+    command:  openssl dhparam -outform PEM -out /tmp/{{ansible_nodename}}.pem 2048
+    delegate_to: localhost
     when: not dhfile.stat.exists
 
   - name: Copy DH parameters to server
@@ -24,7 +25,10 @@
     notify: reload-ocserv
 
   - name: Remove local copy of dh parameters
-    local_action: file path=/tmp/{{ansible_nodename}}.pem state=absent
+    file:
+      path: /tmp/{{ansible_nodename}}.pem
+      state: absent
+    delegate_to: localhost
     when: not dhfile.stat.exists
 
   - name: Configure ocserv
