@@ -7,30 +7,6 @@
       update_cache: True
       cache_valid_time: 1800
 
-  - name: Check if dh parameters exists
-    stat:
-      path: /etc/ocserv/dh.pem
-    register: dhfile
-
-  - name: Generate DH parameters (locally!).
-    command:  openssl dhparam -outform PEM -out /tmp/{{ansible_nodename}}.pem 2048
-    delegate_to: localhost
-    when: not dhfile.stat.exists
-
-  - name: Copy DH parameters to server
-    copy:
-      src: "/tmp/{{ansible_nodename}}.pem"
-      dest: /etc/ocserv/dh.pem
-    when: not dhfile.stat.exists
-    notify: reload-ocserv
-
-  - name: Remove local copy of dh parameters
-    file:
-      path: /tmp/{{ansible_nodename}}.pem
-      state: absent
-    delegate_to: localhost
-    when: not dhfile.stat.exists
-
   - name: Configure ocserv
     become: True
     template:
