@@ -16,7 +16,8 @@ ocserv_use_connect_script: False
 ocserv_use_disconnect_script: False
 
 ocserv_default_domain: ""
-ocserv_cl_network: ""
+ocserv_cl_network:
+  ipv4: ""
 
 ocserv_dns:
   tunnel_all: True
@@ -28,7 +29,7 @@ ocserv_routes: []
 ocserv_tcp_port: 443
 ocserv_tcp_is_proxy: False
 ocserv_udp_port: 443
-ocserv_banner: 'Welcome to portal. Usage of this system is governed by SOSETH and ETH regulations.'
+ocserv_banner: 'Welcome to ocserv.'
 
 ocserv_vhosts: []
 # - name: vpn2.example.com
