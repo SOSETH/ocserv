@@ -17,19 +17,6 @@
       mode: 0644
     notify: reload-ocserv
 
-  - name: Kill systemd socket
-    become: True
-    systemd:
-      name: ocserv.socket
-      masked: True
-
-  - name: Overwrite systemd unit file
-    become: True
-    copy:
-      src: ocserv.service
-      dest: /etc/systemd/system/ocserv.service
-    notify: reload systemd
-
   - name: Create script dir
     become: True
     file:
