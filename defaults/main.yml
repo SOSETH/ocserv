@@ -1,13 +1,46 @@
-ocserv_cl_network: 192.168.254.0/24
+ocserv_auth:
+  - "certificate"
 
-ocserv_have_dns: False
-#ocserv_dns:
-#ocserv_dns_domain:
+ocserv_enable_auth: []
 
-ocserv_routes:
-  - 172.31.0.192/26
+ocserv_cert_path: "/etc/ocserv/server.crt"
+ocserv_key_path: "/etc/ocserv/server.key"
+
+ocserv_use_ca_cert: False # Set to True if certificate auth is used
+ocserv_ca_path: "/etc/ocserv/ca.crt"
+
+ocserv_max_clients: 10
+ocserv_compression: False
+
+ocserv_use_connect_script: False
+ocserv_use_disconnect_script: False
+
+ocserv_default_domain: ""
+ocserv_cl_network: ""
+
+ocserv_dns:
+  tunnel_all: True
+  servers: []
+  split_domains: []
+
+ocserv_routes: []
 
 ocserv_tcp_port: 443
-ocserv_tcp_is_proxy: True
+ocserv_tcp_is_proxy: False
 ocserv_udp_port: 443
 ocserv_banner: 'Welcome to portal. Usage of this system is governed by SOSETH and ETH regulations.'
+
+ocserv_vhosts: []
+# - name: vpn2.example.com
+#   auth: []
+#   enable_auth: []
+#   cert: ...
+#   key: ...
+#   cl_network:
+#     ipv4: 10.0.0.0/24
+#   device: vpns1
+#   config_per_user: ...
+#   config_per_group: ...
+
+# Deploy PAM config which enables SSSD backed 2FA OTP authentication
+ocserv_pam_otp: False

@@ -1,4 +1,6 @@
 ---
+  - include_tasks: variables.yml
+
   - name: Install ocserv
     become: True
     apt:
@@ -34,4 +36,14 @@
     with_items:
       - connect.sh
       - disconnect.sh
+    when: ocserv_use_connect_script or ocserv_use_disconnect_script
     notify: reload-ocserv
+
+  - name: Deploy PAM config
+    become: True
+    copy:
+      src: etc_pam_d_ocserv
+      dest: /etc/pam.d/ocserv
+      owner: root
+      group: root
+      mode: 0644
