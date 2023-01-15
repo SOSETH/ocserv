@@ -664,6 +664,9 @@ server-key = {{ vhost.key }}
 
 ipv4-network = {{ vhost.cl_network.ipv4 }}
 
+# This directive is technically not needed. Due to a bug in the config parsing
+# we have to include it nonetheless for functioning vhosts.
+# See https://gitlab.com/openconnect/ocserv/-/issues/480
 device = {{ vhost.device }}
 
 {% if vhost.config_per_user is defined %}
