@@ -1,14 +1,14 @@
 - name: Check oc_default_domain variable
-  fail:
+  ansible.builtin.fail:
     msg: "Bailing out: ocserv_default_domain is not set"
   when: ocserv_default_domain|length == 0
 
 - name: Check ocserv_cl_network.ipv4 variable
-  fail:
+  ansible.builtin.fail:
     msg: "Bailing out: ocserv_cl_network.ipv4 is not set"
   when: ocserv_cl_network.ipv4|length == 0
 
 - name: Check ocserv_routes variable
-  fail:
+  ansible.builtin.fail:
     msg: "Bailing out: ocserv_routes is not set"
   when: ocserv_routes|length == 0

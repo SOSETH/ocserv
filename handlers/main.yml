@@ -1,12 +1,7 @@
 ---
-  - name: reload-ocserv
-    become: True
-    service:
-      name: ocserv.service
-      enabled: True
-      state: restarted
-
-  - name: reload systemd
-    become: True
-    systemd:
-      daemon_reload: True
+- name: Reload ocserv
+  become: true
+  ansible.builtin.service:
+    name: ocserv.service
+    enabled: true
+    state: restarted

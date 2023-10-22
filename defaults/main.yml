@@ -6,28 +6,28 @@ ocserv_enable_auth: []
 ocserv_cert_path: "/etc/ocserv/server.crt"
 ocserv_key_path: "/etc/ocserv/server.key"
 
-ocserv_use_ca_cert: False # Set to True if certificate auth is used
+ocserv_use_ca_cert: false # Set to True if certificate auth is used
 ocserv_ca_path: "/etc/ocserv/ca.crt"
 
 ocserv_max_clients: 10
-ocserv_compression: False
+ocserv_compression: false
 
-ocserv_use_connect_script: False
-ocserv_use_disconnect_script: False
+ocserv_use_connect_script: false
+ocserv_use_disconnect_script: false
 
 ocserv_default_domain: ""
 ocserv_cl_network:
   ipv4: ""
 
 ocserv_dns:
-  tunnel_all: True
+  tunnel_all: true
   servers: []
   split_domains: []
 
 ocserv_routes: []
 
 ocserv_tcp_port: 443
-ocserv_tcp_is_proxy: False
+ocserv_tcp_is_proxy: false
 ocserv_udp_port: 443
 ocserv_banner: 'Welcome to ocserv.'
 
@@ -44,4 +44,4 @@ ocserv_vhosts: []
 #   config_per_group: ...
 
 # Deploy PAM config which enables SSSD backed 2FA OTP authentication
-ocserv_pam_otp: False
+ocserv_pam_otp: false
