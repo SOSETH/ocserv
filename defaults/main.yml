@@ -29,7 +29,12 @@ ocserv_routes: []
 ocserv_tcp_port: 443
 ocserv_tcp_is_proxy: false
 ocserv_udp_port: 443
+
+ocserv_mtu: 1500
+
 ocserv_banner: 'Welcome to ocserv.'
+
+ocserv_log_level: 1
 
 ocserv_vhosts: []
 # - name: vpn2.example.com

@@ -454,7 +454,7 @@ pid-file = /run/ocserv.pid
 #   4 http
 #   8 sensitive
 #   9 TLS
-log-level = 1
+log-level = {{ ocserv_log_level }}
 
 # Set the protocol-defined priority (SO_PRIORITY) for packets to
 # be sent. That is a number from 0 to 6 with 0 being the lowest
@@ -536,7 +536,7 @@ ping-leases = false
 # connections. Unset to use the default MTU of the TUN device.
 # Note that the MTU is negotiated using the value set and the
 # value sent by the peer.
-#mtu = 1420
+mtu = {{ ocserv_mtu }}
 
 # Unset to enable bandwidth restrictions (in bytes/sec). The
 # setting here is global, but can also be set per user or per group.
